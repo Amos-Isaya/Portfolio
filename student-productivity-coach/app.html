@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111827">
+<meta name="description" content="Focus Flow — a private student planner and focus timer.">
+<title>Focus Flow — Student Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app-shell">
+<aside class="sidebar" id="sidebar">
+<a class="brand" href="#dashboard">
+<b>F</b>Focus<span>Flow</span>
+</a>
+<nav class="main-nav">
+<button class="nav-item active" data-view="dashboard">⌂ <span>Overview</span>
+</button>
+<button class="nav-item" data-view="tasks">✓ <span>My tasks</span>
+<i id="navCount">0</i>
+</button>
+<button class="nav-item" data-view="planner">✦ <span>Smart planner</span>
+</button>
+<button class="nav-item" data-view="focus">◷ <span>Focus room</span>
+</button>
+<button class="nav-item" data-view="calendar">▦ <span>Calendar</span>
+</button>
+</nav>
+<div class="spacer">
+</div>
+<div class="streak">↗ <div>
+<b>
+<span id="streakDays">0</span> day streak</b>
+<small>Finish a session today</small>
+</div>
+</div>
+<nav>
+<button class="nav-item" data-view="settings">⚙ <span>Settings</span>
+</button>
+</nav>
+<div class="user-mini">
+<i id="avatar">S</i>
+<div>
+<b id="sideName">Student</b>
+<small>Personal workspace</small>
+</div>
+<button id="theme" aria-label="Toggle theme">◐</button>
+</div>
+</aside>
+<main class="workspace">
+<header class="mobile-bar">
+<button id="menu">☰</button>
+<a class="brand" href="#dashboard">
+<b>F</b>Focus<span>Flow</span>
+</a>
+<button data-action="new">＋</button>
+</header>
+<section class="view active" id="dashboardView">
+<header class="page-head">
+<div>
+<p class="overline" id="todayLabel">
+</p>
+<h1 id="greeting">Good morning.</h1>
+<p>Let’s turn today’s priorities into progress.</p>
+</div>
+<button class="button primary" data-action="new">＋ Add task</button>
+</header>
+<div class="dashboard-grid">
+<section class="hero panel">
+<div>
+<span class="pill">TODAY'S FOCUS</span>
+<h2 id="heroTitle">Your day is wide open.</h2>
+<p id="heroCopy">Add your first task and Focus Flow will help you choose what to do next.</p>
+<button class="button white" id="heroAction" data-action="new">Add your first task</button>
+<button class="button ghost" data-view="planner">Plan my day</button>
+</div>
+<div class="orbit">
+<svg viewBox="0 0 120 120">
+<circle cx="60" cy="60" r="51"/>
+<circle id="orbit" cx="60" cy="60" r="51"/>
+</svg>
+<div>
+<b id="percent">0%</b>
+<span>complete</span>
+</div>
+</div>
+</section>
+<section class="stats">
+<article class="panel">
+<i class="blue">✓</i>
+<b id="openStat">0</b>
+<span>Open tasks</span>
+<small id="dueStat">Nothing urgent</small>
+</article>
+<article class="panel">
+<i class="purple">◷</i>
+<b id="minuteStat">0m</b>
+<span>Planned focus</span>
+<small>Across open tasks</small>
+</article>
+<article class="panel">
+<i class="orange">⚡</i>
+<b id="sessionStat">0</b>
+<span>Sessions today</span>
+<small id="focusStat">0 minutes focused</small>
+</article>
+</section>
+<section class="panel task-panel">
+<div class="panel-head">
+<div>
+<h2>Up next</h2>
+<p>Your most important unfinished work</p>
+</div>
+<button data-view="tasks">View all →</button>
+</div>
+<div class="task-list" id="dashTasks">
+</div>
+</section>
+<aside class="panel mini-focus">
+<span class="pill purple-pill">FOCUS ROOM</span>
+<h2>Ready when you are</h2>
+<div id="miniTimer">25:00</div>
+<p id="miniTask">Choose a task and start a distraction-free session.</p>
+<button class="button primary full" data-view="focus">Enter focus room →</button>
+</aside>
+</div>
+</section>
+<section class="view" id="tasksView">
+<header class="page-head">
+<div>
+<p class="overline">WORKLOAD</p>
+<h1>My tasks</h1>
+<p>Capture your work. Decide what matters. Get it done.</p>
+</div>
+<button class="button primary" data-action="new">＋ Add task</button>
+</header>
+<section class="panel">
+<div class="toolbar">
+<label>⌕<input id="search" type="search" placeholder="Search tasks or courses…">
+</label>
+<div id="filters">
+<button class="active" data-filter="open">Open</button>
+<button data-filter="all">All</button>
+<button data-filter="done">Completed</button>
+</div>
+<select id="sort">
+<option value="due">Due date</option>
+<option value="priority">Priority</option>
+<option value="newest">Newest</option>
+</select>
+</div>
+<div class="task-list roomy" id="allTasks">
+</div>
+</section>
+</section>
+<section class="view" id="plannerView">
+<header class="page-head">
+<div>
+<p class="overline">SMART PLANNER</p>
+<h1>Build a realistic day.</h1>
+<p>Deadlines become focused blocks, with breathing room built in.</p>
+</div>
+</header>
+<div class="two-col">
+<section class="panel planner-form">
+<i class="feature">✦</i>
+<h2>When can you study?</h2>
+<p>Choose your window and Focus Flow will prioritize the right work.</p>
+<div class="form-grid">
+<label>Start time<input type="time" id="planStart" value="16:00">
+</label>
+<label>Available until<input type="time" id="planEnd" value="20:00">
+</label>
+<label>Focus block<select id="block">
+<option value="25">25 minutes</option>
+<option value="50" selected>50 minutes</option>
+<option value="75">75 minutes</option>
+</select>
+</label>
+<label>Break length<select id="break">
+<option value="5">5 minutes</option>
+<option value="10" selected>10 minutes</option>
+<option value="15">15 minutes</option>
+</select>
+</label>
+</div>
+<button class="button primary full" id="generate">Generate my plan ✦</button>
+</section>
+<section class="panel">
+<div class="panel-head">
+<div>
+<h2>Today’s study plan</h2>
+<p id="planSummary">Generate a plan to see your timeline.</p>
+</div>
+<button id="clearPlan" class="hidden">Clear</button>
+</div>
+<div class="timeline" id="timeline">
+</div>
+</section>
+</div>
+</section>
+<section class="view" id="focusView">
+<header class="page-head">
+<div>
+<p class="overline">FOCUS ROOM</p>
+<h1>One thing at a time.</h1>
+<p>Put everything else aside and make this session count.</p>
+</div>
+</header>
+<div class="focus-layout">
+<section class="panel focus-stage">
+<div class="mode-tabs" id="modes">
+<button class="active" data-mode="focus">Focus</button>
+<button data-mode="short">Short break</button>
+<button data-mode="long">Long break</button>
+</div>
+<div class="timer-ring">
+<svg viewBox="0 0 260 260">
+<circle cx="130" cy="130" r="116"/>
+<circle id="timerProgress" cx="130" cy="130" r="116"/>
+</svg>
+<div>
+<time id="timer">25:00</time>
+<span id="modeLabel">FOCUS SESSION</span>
+</div>
+</div>
+<h2 id="activeName">Choose what you’re working on</h2>
+<p id="activeMeta">Select a task to connect it to this session.</p>
+<div class="timer-controls">
+<button id="reset">↺</button>
+<button class="button primary" id="start">Start focus</button>
+<button id="skip">↠</button>
+</div>
+</section>
+<aside class="panel">
+<div class="panel-head">
+<div>
+<h2>Session task</h2>
+<p>Pick one open task</p>
+</div>
+</div>
+<div class="task-list compact" id="focusTasks">
+</div>
+</aside>
+</div>
+</section>
+<section class="view" id="calendarView">
+<header class="page-head">
+<div>
+<p class="overline">CALENDAR</p>
+<h1>See what’s ahead.</h1>
+<p>Deadlines are easier when you can see them coming.</p>
+</div>
+<button class="button primary" data-action="new">＋ Add task</button>
+</header>
+<section class="panel calendar">
+<div class="cal-head">
+<button id="prev">←</button>
+<h2 id="month">
+</h2>
+<button id="next">→</button>
+<button id="today">Today</button>
+</div>
+<div class="weekdays">
+<span>Sun</span>
+<span>Mon</span>
+<span>Tue</span>
+<span>Wed</span>
+<span>Thu</span>
+<span>Fri</span>
+<span>Sat</span>
+</div>
+<div class="month-grid" id="monthGrid">
+</div>
+</section>
+</section>
+<section class="view" id="settingsView">
+<header class="page-head">
+<div>
+<p class="overline">SETTINGS</p>
+<h1>Make it yours.</h1>
+<p>Personalize your workspace and manage your local data.</p>
+</div>
+</header>
+<div class="two-col">
+<section class="panel settings-card">
+<h2>Profile</h2>
+<form id="profileForm">
+<label>Your name<input id="namePref" maxlength="40">
+</label>
+<label>Daily focus goal<select id="goalPref">
+<option value="1">1 session</option>
+<option value="2">2 sessions</option>
+<option value="3">3 sessions</option>
+<option value="4">4 sessions</option>
+</select>
+</label>
+<label>Default focus length<select id="focusPref">
+<option value="25">25 minutes</option>
+<option value="50">50 minutes</option>
+<option value="75">75 minutes</option>
+</select>
+</label>
+<button class="button primary">Save preferences</button>
+</form>
+</section>
+<section class="panel settings-card">
+<h2>Privacy & data</h2>
+<p>Everything stays in this browser. Focus Flow does not upload your tasks, profile, or focus history.</p>
+<div class="data-actions">
+<button class="button secondary" id="export">Export my data</button>
+<label class="button secondary">Import data<input type="file" id="import" accept="application/json" hidden>
+</label>
+<button class="button danger" id="clearData">Delete all data</button>
+</div>
+</section>
+</div>
+</section>
+</main>
+</div>
+<div class="backdrop" id="backdrop">
+</div>
+<dialog id="taskModal">
+<form id="taskForm">
+<div class="modal-head">
+<div>
+<span class="pill blue-pill">TASK DETAILS</span>
+<h2 id="modalTitle">Add something to your plate</h2>
+</div>
+<button type="button" data-action="close">×</button>
+</div>
+<input type="hidden" id="taskId">
+<label>Task name<input id="taskName" required maxlength="100" placeholder="e.g. Finish Python lab">
+</label>
+<div class="form-grid">
+<label>Course or category<input id="course" required maxlength="40" placeholder="e.g. CIS 210">
+</label>
+<label>Due date<input id="due" required type="date">
+</label>
+<label>Priority<select id="priority">
+<option value="high">High</option>
+<option value="medium" selected>Medium</option>
+<option value="low">Low</option>
+</select>
+</label>
+<label>Estimated time<select id="minutes">
+<option value="25">25 minutes</option>
+<option value="50" selected>50 minutes</option>
+<option value="75">1 hr 15 min</option>
+<option value="100">1 hr 40 min</option>
+<option value="150">2 hr 30 min</option>
+<option value="240">4 hours</option>
+</select>
+</label>
+</div>
+<label>Notes <small>(optional)</small>
+<textarea id="notes" maxlength="300" placeholder="Links, instructions, or a reminder…">
+</textarea>
+</label>
+<div class="modal-actions">
+<button class="button secondary" type="button" data-action="close">Cancel</button>
+<button class="button primary">Save task</button>
+</div>
+</form>
+</dialog>
+<div id="toasts" aria-live="polite">
+</div>
+<script src="app.js">
+</script>
+</body>
+</html>
